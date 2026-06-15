@@ -143,7 +143,8 @@
   }
 
   function tegnTrae(r) {
-    const W = 360, H = 420, cx = 180, cy = 245;
+    const W = 440, H = 500, cx = 220;
+    const forkY = 250, baseY = 332;                 // kronens hjerte og stammens bund
     const NS = "http://www.w3.org/2000/svg";
     const svg = $("#traeSvg");
     svg.innerHTML = `
@@ -155,6 +156,15 @@
         <radialGradient id="kerne" cx="40%" cy="35%">
           <stop offset="0%" stop-color="#2c4a36"/><stop offset="100%" stop-color="#101c14"/>
         </radialGradient>
+        <radialGradient id="krone" cx="50%" cy="42%">
+          <stop offset="0%" stop-color="rgba(139,227,168,.10)"/><stop offset="100%" stop-color="rgba(139,227,168,0)"/>
+        </radialGradient>
+        <linearGradient id="bark" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#3f5340"/><stop offset="50%" stop-color="#4a3c28"/><stop offset="100%" stop-color="#33291a"/>
+        </linearGradient>
+        <linearGradient id="grenG" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0%" stop-color="rgba(120,150,118,.55)"/><stop offset="100%" stop-color="rgba(139,227,168,.5)"/>
+        </linearGradient>
       </defs>`;
 
     const add = (tag, attrs, parent) => {
@@ -173,76 +183,86 @@
       mp.setAttributeNS("http://www.w3.org/1999/xlink", "href", "#" + sti);
       am.appendChild(mp); c.appendChild(am);
     };
+    const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+    const DEG = Math.PI / 180;
 
-    /* —— Grene (parringer, opad) —— */
-    const par = r.par.slice(0, 8);
-    const n = par.length;
-    par.forEach((p, i) => {
-      const t = n === 1 ? .5 : i / (n - 1);
-      const ang = Math.PI * (1.16 - 1.32 * t);            // vifte hen over toppen
-      const len = 148 + (i % 3) * 14;
-      const ex = cx + Math.cos(ang) * len;
-      const ey = cy - 38 - Math.sin(ang) * (len * .78);
-      const mx = cx + Math.cos(ang) * len * .42;
-      const my = cy - 30 - Math.sin(ang) * len * .30;
-      const pid = "gren" + i;
-      add("path", { id: pid, d: `M ${cx} ${cy - 26} Q ${mx} ${my} ${ex} ${ey}`,
-        class: "gren", stroke: "rgba(139,227,168,.30)", "stroke-width": 2.2 - t * 0 });
-      lysPaaSti(pid, 2.6 + (i % 4) * .5, "#8be3a8", 2.4, i * .35);
-
-      const match = findByNavn(p);
-      const g = add("g", { class: "node-label", "data-rid": match ? match.id : "" });
-      add("circle", { cx: ex, cy: ey, r: 4, fill: match ? "#8be3a8" : "#46604f",
-        filter: match ? "url(#fglow)" : "", class: match ? "lys" : "" }, g);
-      const anchor = ex < cx - 14 ? "end" : ex > cx + 14 ? "start" : "middle";
-      const tx = add("text", { x: ex + (anchor === "end" ? -9 : anchor === "start" ? 9 : 0),
-        y: ey + (anchor === "middle" ? -10 : 4), "text-anchor": anchor,
-        fill: match ? "#cfeeda" : "#8fa698", "font-size": "11.5",
-        "font-family": "-apple-system, sans-serif" }, g);
-      tx.textContent = p;
-      if (match) g.addEventListener("click", () => visTrae(match.id));
-    });
-
-    /* —— Stamme + kerne —— */
-    add("path", { d: `M ${cx} ${cy + 30} L ${cx} ${cy - 26}`, class: "gren",
-      stroke: "rgba(139,227,168,.5)", "stroke-width": 5 });
-    add("circle", { cx, cy, r: 34, fill: "url(#kerne)", stroke: "rgba(139,227,168,.55)",
-      "stroke-width": 1.5, filter: "url(#fglow)" });
-    const navnDele = r.navn.split(" ");
-    navnDele.slice(0, 2).forEach((del, i) => {
-      const t = add("text", { x: cx, y: cy + (navnDele.length > 1 ? -2 + i * 13 : 4),
-        "text-anchor": "middle", fill: "#e9f0ea", "font-size": navnDele.length > 1 ? "10.5" : "12",
-        "font-weight": "700", "font-family": "-apple-system, sans-serif" });
-      t.textContent = del;
-    });
-
-    /* —— Rødder (sæson, nedad) —— */
+    /* —— Rødder (sæson, nedad) – tegnes først, bag stammen —— */
     const mdr = D.maaneder;
     mdr.forEach((m, i) => {
       const mnr = i + 1;
       const iSaeson = r.saeson.includes(mnr);
       const iPeak = r.peak.includes(mnr);
       const t = i / 11;
-      const ang = Math.PI * (.92 - .84 * t);               // vifte under jorden
-      const len = iSaeson ? 96 : 62;
-      const ex = cx + Math.cos(ang) * (len + 22);
-      const ey = cy + 34 + Math.sin(ang) * len * .82;
-      const mx = cx + Math.cos(ang) * 40;
-      const my = cy + 36 + Math.sin(ang) * 26;
+      const ang = (202 + 136 * t) * DEG;                  // vifte nedad, venstre -> højre
+      const rrx = iSaeson ? 152 : 104;
+      const rry = iSaeson ? 122 : 90;
+      let ex = clamp(cx + Math.cos(ang) * rrx, 26, W - 26);
+      const ey = baseY + 4 - Math.sin(ang) * rry;
+      const cpx = cx + (ex - cx) * 0.42, cpy = baseY + 36;
       const pid = "rod" + i;
-      add("path", { id: pid, d: `M ${cx} ${cy + 28} Q ${mx} ${my} ${ex} ${ey}`, class: "gren",
-        stroke: iPeak ? "rgba(233,200,123,.55)" : iSaeson ? "rgba(139,227,168,.28)" : "rgba(70,96,79,.22)",
-        "stroke-width": iPeak ? 2.4 : 1.5 });
+      add("path", { id: pid, d: `M ${cx} ${baseY} Q ${cpx} ${cpy} ${ex} ${ey}`, class: "gren",
+        stroke: iPeak ? "rgba(233,200,123,.6)" : iSaeson ? "rgba(139,227,168,.32)" : "rgba(74,60,40,.45)",
+        "stroke-width": iPeak ? 2.6 : iSaeson ? 2 : 1.4 });
       if (iSaeson) lysPaaSti(pid, 3.4 + (i % 3) * .6, iPeak ? "#e9c87b" : "#8be3a8", iPeak ? 2.6 : 1.8, i * .28);
-      add("circle", { cx: ex, cy: ey, r: iPeak ? 3.5 : 2.4,
-        fill: iPeak ? "#e9c87b" : iSaeson ? "#8be3a8" : "#33463b",
+      add("circle", { cx: ex, cy: ey, r: iPeak ? 3.6 : 2.4,
+        fill: iPeak ? "#e9c87b" : iSaeson ? "#8be3a8" : "#3a2e1f",
         filter: iPeak ? "url(#fglow)" : "", class: iPeak ? "lys" : "" });
-      const tx = add("text", { x: ex, y: ey + 13, "text-anchor": "middle",
-        fill: iPeak ? "#e9c87b" : iSaeson ? "#8fa698" : "#46604f", "font-size": "9",
+      const tx = add("text", { x: clamp(ex, 20, W - 20), y: ey + 13, "text-anchor": "middle",
+        fill: iPeak ? "#e9c87b" : iSaeson ? "#8fa698" : "#5d4a33", "font-size": "9",
         "font-family": "-apple-system, sans-serif" });
       tx.textContent = m;
       if (mnr === MND) add("circle", { cx: ex, cy: ey, r: 7, fill: "none",
-        stroke: "rgba(233,200,123,.8)", "stroke-width": 1, class: "lys" });
+        stroke: "rgba(233,200,123,.85)", "stroke-width": 1, class: "lys" });
+    });
+
+    /* —— Stamme (bark) —— */
+    add("path", { d:
+      `M ${cx - 7} ${forkY} C ${cx - 9} ${forkY + 34} ${cx - 16} ${baseY - 22} ${cx - 22} ${baseY} ` +
+      `C ${cx - 13} ${baseY + 3} ${cx - 6} ${baseY + 3} ${cx} ${baseY} ` +
+      `C ${cx + 6} ${baseY + 3} ${cx + 13} ${baseY + 3} ${cx + 22} ${baseY} ` +
+      `C ${cx + 16} ${baseY - 22} ${cx + 9} ${forkY + 34} ${cx + 7} ${forkY} Z`,
+      fill: "url(#bark)", stroke: "rgba(139,227,168,.12)", "stroke-width": 1 });
+
+    /* —— Løvkrone-glød (foliage) —— */
+    add("ellipse", { cx, cy: 140, rx: 162, ry: 108, fill: "url(#krone)" });
+
+    /* —— Grene + blade (parringer, opad) —— */
+    const par = r.par.slice(0, 8);
+    const n = par.length;
+    par.forEach((p, i) => {
+      const t = n === 1 ? .5 : i / (n - 1);
+      const ang = (160 - 140 * t) * DEG;                  // venstre -> højre over kronen
+      let ex = clamp(cx + Math.cos(ang) * 142, 104, W - 104);
+      const ey = 150 - Math.sin(ang) * 104;
+      const cpx = cx + (ex - cx) * 0.45, cpy = (forkY + ey) / 2 - 6;
+      const pid = "gren" + i;
+      add("path", { id: pid, d: `M ${cx} ${forkY - 6} Q ${cpx} ${cpy} ${ex} ${ey}`,
+        class: "gren", stroke: "url(#grenG)", "stroke-width": 2.4 });
+      lysPaaSti(pid, 2.6 + (i % 4) * .5, "#8be3a8", 2.2, i * .35);
+
+      const match = findByNavn(p);
+      const g = add("g", { class: "node-label", "data-rid": match ? match.id : "" });
+      add("circle", { cx: ex, cy: ey, r: match ? 5 : 3.6, fill: match ? "#8be3a8" : "#46604f",
+        filter: match ? "url(#fglow)" : "", class: match ? "lys" : "" }, g);
+      const mid = Math.abs(ex - cx) < 24;
+      const anchor = mid ? "middle" : (ex < cx ? "end" : "start");
+      const tx = add("text", { x: mid ? ex : ex + (ex < cx ? -10 : 10),
+        y: mid ? ey - 11 : ey + 4, "text-anchor": anchor,
+        fill: match ? "#cfeeda" : "#8fa698", "font-size": "11",
+        "font-family": "-apple-system, sans-serif" }, g);
+      tx.textContent = p;
+      if (match) g.addEventListener("click", () => visTrae(match.id));
+    });
+
+    /* —— Hjerte / kerne med råvarens navn —— */
+    add("circle", { cx, cy: forkY, r: 33, fill: "url(#kerne)", stroke: "rgba(139,227,168,.55)",
+      "stroke-width": 1.5, filter: "url(#fglow)" });
+    const navnDele = r.navn.split(" ");
+    navnDele.slice(0, 2).forEach((del, i) => {
+      const tt = add("text", { x: cx, y: forkY + (navnDele.length > 1 ? -2 + i * 13 : 4),
+        "text-anchor": "middle", fill: "#e9f0ea", "font-size": navnDele.length > 1 ? "10.5" : "12",
+        "font-weight": "700", "font-family": "-apple-system, sans-serif" });
+      tt.textContent = del;
     });
   }
 
@@ -533,3 +553,4 @@ Svar KUN med et JSON-array af 5 strenge, intet andet.`;
   renderTodos();
   renderIdeer();
 })();
+
