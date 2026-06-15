@@ -105,7 +105,7 @@
     const hits = D.raavarer.filter(r => norm(r.navn).includes(q) || r.par.some(p => norm(p).includes(q))).slice(0, 6);
     box.innerHTML = hits.map(r => {
       const viaPar = !norm(r.navn).includes(q);
-      return `<div class="suggest-item" data-rid="${r.id}">${esc(r.navn)}<small>${viaPar ? "parring-match" : (r.peak.includes(MND) ? "✦ peak nu" : r.saeson.includes(MND) ? "i sæson nu" : "")}</small></div>`;
+      return `<div class="suggest-item" data-rid="${r.id}">${esc(r.navn)}<small>${viaPar ? "parring-match" : (r.peak.includes(MND) ? "✦ peak nu" : r.saeson.includes(MND) ? "i sæson nu" : (!r.saeson.length ? "året rundt" : ""))}</small></div>`;
     }).join("") || `<div class="empty">Ingen match – prøv en anden råvare</div>`;
     $$("#traeSuggest [data-rid]").forEach(el => el.addEventListener("click", () => {
       $("#traeSearch").value = ""; box.innerHTML = ""; visTrae(el.dataset.rid);
@@ -119,7 +119,12 @@
     tegnTrae(r);
 
     const sm = D.maaneder;
+    const aaret = !r.saeson || r.saeson.length === 0;
     const saesonTxt = r.saeson.map(m => sm[m - 1]).join(" · ");
+    const peakTxt = (r.peak && r.peak.length) ? r.peak.map(m => sm[m - 1]).join(", ") : "";
+    const tilgang = aaret
+      ? `Tilgang: <b>Året rundt</b>${peakTxt ? ` &nbsp;·&nbsp; <span style="color:var(--gold)">✦ bedst: ${peakTxt}</span>` : ""}`
+      : `Sæson: ${saesonTxt}${peakTxt ? ` &nbsp;·&nbsp; <span style="color:var(--gold)">✦ peak: ${peakTxt}</span>` : ""}`;
     const trends = (r.trends || []).map(tid => D.trends.find(t => t.id === tid)).filter(Boolean);
     $("#traeInfo").innerHTML = `
       <div class="card">
@@ -127,11 +132,10 @@
           <h3 style="margin:0;font-size:19px;">${esc(r.navn)}</h3>
           <span class="badge green">${esc(r.kat)}</span>
         </div>
-        <p class="hint" style="margin:8px 0 4px;">Sæson: ${saesonTxt} &nbsp;·&nbsp; <span style="color:var(--gold)">✦ peak: ${r.peak.map(m => sm[m - 1]).join(", ")}</span></p>
+        <p class="hint" style="margin:8px 0 4px;">${tilgang}</p>
         <div style="margin-top:8px;">${trends.map(t => `<span class="badge">${esc(t.navn)}</span>`).join("")}</div>
       </div>
-      <h2 class="section">Idéer til Kaiser-kortet</h2>
-      ${r.menu.map(m => `<div class="menu-idea">${esc(m)}</div>`).join("")}
+      ${(r.menu && r.menu.length) ? `<h2 class="section">Idéer til Kaiser-kortet</h2>` + r.menu.map(m => `<div class="menu-idea">${esc(m)}</div>`).join("") : ""}
       ${trends.length ? `<h2 class="section">Hvorfor nu</h2>` + trends.map(t =>
         `<div class="card" style="padding:12px 14px;"><b style="color:var(--gold);font-size:13.5px;">${esc(t.navn)}</b><p class="hint" style="margin:4px 0 0;">${esc(t.desc)}</p></div>`).join("") : ""}
     `;
