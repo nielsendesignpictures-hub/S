@@ -32,6 +32,7 @@
     $$("nav button").forEach(b => b.classList.toggle("on", b.dataset.go === view));
     window.scrollTo(0, 0);
     if (view === "hjem") renderDash();
+    if (view === "drift") renderDriftView();
   }
   $$("nav button").forEach(b => b.addEventListener("click", () => go(b.dataset.go)));
   $$("[data-go]", $("main")).forEach(b => b.addEventListener("click", () => {
@@ -508,17 +509,206 @@ Svar KUN med et JSON-array af 5 strenge, intet andet.`;
   }
 
   /* ============================================================
+     DRIFT – live dashboard fra Google Sheet (via sikker bro)
+  ============================================================ */
+  const DRIFT_CAFEER = ["Helsingør", "Hillerød", "Farum", "Hørsholm", "Vanløse", "Enghave Brygge"];
+
+  function cafeKort(loc) {
+    const s = String(loc || "");
+    for (const c of DRIFT_CAFEER) if (s.toLowerCase().includes(c.toLowerCase())) return c;
+    return s.trim() ? "Andet" : "Ukendt";
+  }
+  function parseDato(s) {
+    if (!s) return null;
+    s = String(s).trim();
+    let m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (m) return new Date(+m[1], +m[2] - 1, +m[3]);
+    m = s.match(/^(\d{1,2})[\/.](\d{1,2})[\/.](\d{4})/);
+    if (m) return new Date(+m[3], +m[2] - 1, +m[1]);
+    const d = new Date(s); return isNaN(d) ? null : d;
+  }
+  function ddmm(d) { return d ? `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}` : ""; }
+  const erAaben = st => { const s = String(st || "").toLowerCase().trim(); return s !== "closed" && s !== "lukket" && s !== "resolved"; };
+  const sevKlasse = sv => { const s = String(sv || "").toLowerCase(); return s === "critical" ? "sev-crit" : (s === "high" ? "sev-high" : ""); };
+  const klip = (s, n) => { s = String(s || "").replace(/\s+/g, " ").trim(); return s.length > n ? s.slice(0, n - 1) + "…" : s; };
+
+  function temaer(t) {
+    const x = String(t || "").toLowerCase();
+    const har = (...ws) => ws.some(w => x.includes(w));
+    const res = [];
+    if (har("brød", "rugbrød", "bolle", "wienerbrød", "tebirkes", "croissant") && har("tør", "hård", "gammel", "knas", "over bag", "overbag", "halv bag", "smuldr", "underbag")) res.push("Tørt/dårligt brød");
+    if (har("kold", "halvkold", "lunken")) res.push("Kold mad");
+    if (har("vente", "ventetid", "langsom", "en time", "1 time", "time før", "halv time", " min ", "30 min", "40 min", "45 min", "20 minutter", "tog ")) res.push("Lang ventetid");
+    if (har("tør", "gennemstegt", "oversteg", "well done", "sej", "tørstegt") && har("bøf", "flæsk", "kylling", "angus", "schnitzel", "kød", "steak", "pariserbøf")) res.push("Tørt/oversteg kød");
+    if (har("crumble", "cumble", "rabarber")) res.push("Crumble / rabarber");
+    if (har("hår", "plastik", "sten", "skæghår", "fremmed", "prismærke", "datomærke", "stok ")) res.push("Fremmedlegeme / hygiejne");
+    if (har("larm", "støj", "akustik", "lydniveau", "højt lyd")) res.push("Larm / akustik");
+    if (har("service", "tjener", "personale", "uopmærksom", "stresset", "betjening", "serviceminded")) res.push("Service / personale");
+    if (har("udvalg", "kedelig", "portion", "for lille", "for lidt", "mindre end", "småt med")) res.push("Udvalg / portion");
+    return res;
+  }
+
+  function driftCfg() { return { url: store.get("driftUrl", ""), token: store.get("driftToken", "") }; }
+
+  function driftSetupHtml() {
+    return `<div class="card">
+      <h3 style="margin:0 0 8px;">Forbind dit driftsark 📊</h3>
+      <p class="hint" style="margin:0 0 12px;">Drift-fanen viser åbne sager, kommende catering og klage-temaer live fra dine 6 caféers Google Sheet – via en sikker bro, så følsomme data (og API-nøgle-fanen) aldrig bliver offentlige.</p>
+      <p class="hint" style="margin:0 0 14px;">Opsætning tager ca. 5 min. og er beskrevet i filen <b>kaiser-drift-bro.gs</b>. Derefter indsætter du URL + token her:</p>
+      <button class="btn" id="driftGoSettings">⚙︎ Åbn indstillinger</button>
+    </div>`;
+  }
+
+  async function hentDrift(force) {
+    const { url, token } = driftCfg();
+    const box = $("#driftBody");
+    if (!url) { box.innerHTML = driftSetupHtml(); const b = $("#driftGoSettings"); if (b) b.addEventListener("click", aabnSettings); return; }
+    const cache = store.get("driftCache", null);
+    if (cache) renderDrift(cache);
+    else box.innerHTML = `<div class="card"><div class="empty"><span class="spinner"></span> Henter drift…</div></div>`;
+    try {
+      const sep = url.includes("?") ? "&" : "?";
+      const res = await fetch(url + sep + "token=" + encodeURIComponent(token), { redirect: "follow" });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const data = await res.json();
+      if (data.error) throw new Error(data.error === "unauthorized" ? "Forkert token – tjek ⚙︎" : data.error);
+      store.set("driftCache", data);
+      store.set("driftHentet", Date.now());
+      renderDrift(data);
+      if (force) toast("Drift opdateret ✓");
+    } catch (e) {
+      if (cache) { if (force) toast("Kunne ikke opdatere – viser sidste hentning"); }
+      else box.innerHTML = `<div class="card"><div class="empty">Kunne ikke hente data.<br><small>${esc(e.message)}</small><br>Tjek URL/token under ⚙︎.</div></div>`;
+    }
+  }
+
+  function renderDrift(data) {
+    const box = $("#driftBody");
+    const gc = (data.guest_complaints || []).filter(r => r.id || r.description || r.severity);
+    const si = (data.supplier_issues || []).filter(r => r.id || r.productName || r.supplierName);
+    const fi = (data.faults_issues || []).filter(r => r.id || r.description || r.area);
+    const so = (data.soldout_products || []).filter(r => r.productName);
+    const ce = (data.catering_events || []).filter(r => r.customerName && r.deliveryDate);
+
+    const gcO = gc.filter(r => erAaben(r.status));
+    const siO = si.filter(r => erAaben(r.status));
+    const fiO = fi.filter(r => erAaben(r.status));
+    const soO = so.filter(r => erAaben(r.status));
+
+    const t0 = NU(); t0.setHours(0, 0, 0, 0);
+
+    // ---- Kommende catering ----
+    const kommende = ce.map(r => ({ ...r, _d: parseDato(r.deliveryDate) }))
+      .filter(r => r._d && r._d >= t0)
+      .sort((a, b) => a._d - b._d).slice(0, 8);
+
+    // ---- Klage-temaer ----
+    const temaTal = {};
+    gc.forEach(r => temaer(r.description).forEach(t => temaTal[t] = (temaTal[t] || 0) + 1));
+    const temaListe = Object.entries(temaTal).sort((a, b) => b[1] - a[1]).slice(0, 8);
+    const temaMax = temaListe.length ? temaListe[0][1] : 1;
+
+    // ---- Pr. café ----
+    const perCafe = {};
+    const tael = (arr) => arr.forEach(r => { const c = cafeKort(r.location); perCafe[c] = (perCafe[c] || 0) + 1; });
+    tael(gcO); tael(siO); tael(fiO); tael(soO);
+    const cafeListe = Object.entries(perCafe).filter(([c]) => c !== "Ukendt").sort((a, b) => b[1] - a[1]);
+
+    // ---- Seneste åbne sager ----
+    const sorter = arr => arr.map(r => ({ ...r, _d: parseDato(r.date || r.createdAt) })).sort((a, b) => (b._d || 0) - (a._d || 0));
+    const fiSen = sorter(fiO).slice(0, 6);
+    const siSen = sorter(siO).slice(0, 6);
+    const gcSen = sorter(gcO.filter(r => !/^nps:/i.test(String(r.description || "").trim()))).slice(0, 6);
+
+    const hentet = store.get("driftHentet", 0);
+    const hTxt = hentet ? new Date(hentet).toLocaleString("da-DK", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : "–";
+
+    const itemHtml = (titel, meta, desc, sev) =>
+      `<div class="drift-item ${sevKlasse(sev)}">
+        <div class="di-top"><span class="di-title">${esc(titel)}</span><span class="di-meta">${esc(meta)}</span></div>
+        ${desc ? `<div class="di-desc">${esc(desc)}</div>` : ""}
+      </div>`;
+
+    box.innerHTML = `
+      <div class="drift-meta">
+        <span>Live fra 6 caféer · opdateret ${esc(hTxt)}</span>
+        <button class="btn ghost small" id="driftRefresh" style="width:auto;padding:6px 12px;">↻ Opdatér</button>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat"><div class="num ${gcO.length ? "bad" : ""}">${gcO.length}</div><div class="lbl">Åbne gæsteklager</div></div>
+        <div class="stat"><div class="num ${siO.length ? "warn" : ""}">${siO.length}</div><div class="lbl">Åbne leverandørfejl</div></div>
+        <div class="stat"><div class="num ${fiO.length ? "warn" : ""}">${fiO.length}</div><div class="lbl">Åbne café-fejl</div></div>
+        <div class="stat"><div class="num">${soO.length}</div><div class="lbl">Udsolgt-meldinger</div></div>
+      </div>
+
+      ${cafeListe.length ? `<h2 class="section">Åbne sager pr. café</h2>
+        <div class="card">${cafeListe.map(([c, n]) => `<div class="cafe-row"><span>${esc(c)}</span><b>${n}</b></div>`).join("")}</div>` : ""}
+
+      ${kommende.length ? `<h2 class="section">Kommende catering</h2>
+        ${kommende.map(r => itemHtml(
+          `${ddmm(r._d)} · ${esc(cafeKort(r.location) === "Ukendt" ? r.location : cafeKort(r.location))} · ${esc(r.guests || "?")} pers.`,
+          esc(r.deliveryTime || ""),
+          `${r.customerName ? esc(r.customerName) + " — " : ""}${klip(r.note, 120)}`, ""
+        )).join("")}` : ""}
+
+      ${temaListe.length ? `<h2 class="section">Gennemgående klage-temaer</h2>
+        <div class="card">${temaListe.map(([t, n]) => `
+          <div class="theme-row">
+            <span class="tname">${esc(t)}</span>
+            <span class="tbarwrap"><span class="tbar" style="width:${Math.round(n / temaMax * 100)}%"></span></span>
+            <span class="tcount">${n}</span>
+          </div>`).join("")}
+          <p class="hint" style="margin:6px 0 0;">Tæller alle registrerede gæsteklager – flest øverst.</p></div>` : ""}
+
+      ${gcSen.length ? `<h2 class="section">Seneste åbne gæsteklager</h2>
+        ${gcSen.map(r => itemHtml(
+          `${cafeKort(r.location)} · ${esc(r.category || "Klage")}`,
+          `${esc(r.severity || "")} · ${ddmm(r._d)}`,
+          klip(r.description, 150), r.severity
+        )).join("")}` : ""}
+
+      ${fiSen.length ? `<h2 class="section">Seneste café-fejl & mangler</h2>
+        ${fiSen.map(r => itemHtml(
+          `${cafeKort(r.location)} · ${esc(r.area || "")}${r.issueType ? " · " + esc(r.issueType) : ""}`,
+          `${esc(r.severity || "")} · ${ddmm(r._d)}`,
+          klip(r.description, 150), r.severity
+        )).join("")}` : ""}
+
+      ${siSen.length ? `<h2 class="section">Seneste leverandørfejl</h2>
+        ${siSen.map(r => itemHtml(
+          `${cafeKort(r.location)} · ${esc(r.supplierName || "Leverandør")}`,
+          `${esc(r.issueType || "")} · ${ddmm(r._d)}`,
+          klip([r.productName, r.description].filter(Boolean).join(" — "), 150), ""
+        )).join("")}` : ""}
+    `;
+    const rb = $("#driftRefresh"); if (rb) rb.addEventListener("click", () => hentDrift(true));
+  }
+
+  function renderDriftView() { hentDrift(false); }
+
+  /* ============================================================
      INDSTILLINGER
   ============================================================ */
-  $("#btnSettings").addEventListener("click", () => {
+  function aabnSettings() {
     $("#apiKeyInput").value = store.get("apikey", "");
+    $("#driftUrlInput").value = store.get("driftUrl", "");
+    $("#driftTokenInput").value = store.get("driftToken", "");
     $("#modalSettings").classList.add("open");
-  });
+  }
+  $("#btnSettings").addEventListener("click", aabnSettings);
   $("#btnSettingsLuk").addEventListener("click", () => $("#modalSettings").classList.remove("open"));
   $("#btnApiGem").addEventListener("click", () => {
     store.set("apikey", $("#apiKeyInput").value.trim());
     toast("Nøgle gemt lokalt 🔒");
     $("#modalSettings").classList.remove("open");
+  });
+  $("#btnDriftGem").addEventListener("click", () => {
+    store.set("driftUrl", $("#driftUrlInput").value.trim());
+    store.set("driftToken", $("#driftTokenInput").value.trim());
+    $("#modalSettings").classList.remove("open");
+    toast("Drift-forbindelse gemt 🔒");
+    go("drift"); hentDrift(true);
   });
 
   $("#btnExport").addEventListener("click", () => {
@@ -553,4 +743,5 @@ Svar KUN med et JSON-array af 5 strenge, intet andet.`;
   renderTodos();
   renderIdeer();
 })();
+
 
