@@ -1,6 +1,6 @@
 /* Kaiser HQ – service worker.
    Bump CACHE-navnet (v1 -> v2) når du opdaterer app'en, så telefonen henter nyt. */
-const CACHE = "kaiserhq-v2";
+const CACHE = "kaiserhq-v3";
 const FILER = ["./", "./index.html", "./app.js", "./data.js", "./manifest.webmanifest",
   "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
 
