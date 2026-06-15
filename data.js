@@ -348,7 +348,532 @@ window.KDATA = {
     { id: "hyldebaer", navn: "Hyldebær", kat: "frugt & bær", saeson: [8,9], peak: [9],
       par: ["æble", "kanel", "and", "vildt", "honning", "ingefær"],
       menu: ["Varm hyldebærdrik m. æble på drikkekortet sep–dec (gratis råvare ved selvpluk)"],
-      trends: ["zerowaste", "funktionel", "hyperlokal"] }
+      trends: ["zerowaste", "funktionel", "hyperlokal"] },
+
+    /* ============================================================
+       ÅRET RUNDT / IMPORT  (saeson + peak tomme = vises som "Året rundt",
+       holdes ude af sæson-dashboardet, men kan altid søges frem og sparres med)
+       ============================================================ */
+
+    /* —— FRUGT & CITRUS —— */
+    { id: "citron", navn: "Citron", kat: "frugt & citrus", saeson: [], peak: [], aaretrundt: true,
+      par: ["fisk", "olivenolie", "hvidløg", "persille", "kapers", "smør", "honning", "timian", "rejer"],
+      menu: ["Citron-DNA i alle fiskeretter og dressinger – syre løfter alt", "Konfiteret/saltcitron som hemmelig umami i mayo og dressinger"],
+      trends: ["zerowaste"] },
+
+    { id: "lime", navn: "Lime", kat: "frugt & citrus", saeson: [], peak: [], aaretrundt: true,
+      par: ["koriander", "chili", "kokos", "avocado", "rejer", "mynte", "fiskesauce", "ingefær"],
+      menu: ["Lime-koriander dressing til poké bowl og crispy chicken", "Mocktails m. lime og mynte på drikkekortet"],
+      trends: ["asiatisk", "funktionel"] },
+
+    { id: "appelsin", navn: "Appelsin", kat: "frugt & citrus", saeson: [], peak: [], aaretrundt: true,
+      par: ["and", "fennikel", "rødbede", "chokolade", "kanel", "oliven", "gulerod"],
+      menu: ["Appelsin-fennikelsalat til fisk og laks", "Friskpresset juice på brunchkortet"],
+      trends: ["funktionel"] },
+
+    { id: "blodappelsin", navn: "Blodappelsin", kat: "frugt & citrus", saeson: [], peak: [1,2,3], aaretrundt: true,
+      par: ["fennikel", "burrata", "oliven", "chokolade", "rødløg", "rosmarin"],
+      menu: ["Vintersalat: blodappelsin, burrata & oliven (farve på et gråt kort jan–mar)"],
+      trends: ["planterig"] },
+
+    { id: "grapefrugt", navn: "Grapefrugt", kat: "frugt & citrus", saeson: [], peak: [], aaretrundt: true,
+      par: ["avocado", "rejer", "fennikel", "mynte", "honning", "chili"],
+      menu: ["Frisk grapefrugt i poké bowl og rejesalat (bitter-sød kontrast)"],
+      trends: ["planterig", "funktionel"] },
+
+    { id: "mandarin", navn: "Mandarin / clementin", kat: "frugt & citrus", saeson: [], peak: [11,12,1], aaretrundt: true,
+      par: ["chokolade", "kanel", "and", "mandel", "vanilje"],
+      menu: ["Mandarin på julebrunch og i desserter nov–jan"],
+      trends: ["nostalgi"] },
+
+    { id: "banan", navn: "Banan", kat: "frugt & citrus", saeson: [], peak: [], aaretrundt: true,
+      par: ["chokolade", "peanut", "karamel", "havre", "kanel", "kaffe", "kokos"],
+      menu: ["Bananpandekager og banana bread på brunch/kaffekortet", "Frosne bananer i smoothies (zero waste for overmodne)"],
+      trends: ["protein", "zerowaste"] },
+
+    { id: "ananas", navn: "Ananas", kat: "frugt & citrus", saeson: [], peak: [], aaretrundt: true,
+      par: ["chili", "kokos", "lime", "mynte", "rom", "svinekød", "koriander"],
+      menu: ["Grillet ananas-salsa til crispy chicken og pulled pork (swicy)", "Ananas i mocktails"],
+      trends: ["swicy", "funktionel"] },
+
+    { id: "mango", navn: "Mango", kat: "frugt & citrus", saeson: [], peak: [], aaretrundt: true,
+      par: ["chili", "lime", "kokos", "avocado", "rejer", "koriander", "yoghurt"],
+      menu: ["Mango-salsa til fisk og bowls", "Mango-lassi / smoothie på drikkekortet"],
+      trends: ["asiatisk", "funktionel"] },
+
+    { id: "avocado", navn: "Avocado", kat: "frugt & citrus", saeson: [], peak: [], aaretrundt: true,
+      par: ["lime", "chili", "koriander", "æg", "tomat", "feta", "laks", "rugbrød"],
+      menu: ["Avocado-toast som fast brunch-element (æg + chiliflager)", "Smashed avocado i poké bowl og sandwich"],
+      trends: ["protein", "planterig"] },
+
+    { id: "fersken", navn: "Fersken", kat: "frugt & citrus", saeson: [], peak: [7,8], aaretrundt: true,
+      par: ["basilikum", "burrata", "serrano", "vanilje", "mandel", "honning", "rosmarin", "mascarpone"],
+      menu: ["Sommersalat: fersken, burrata & serrano (bedst jul–aug)", "Grillet fersken m. mascarpone som dessert"],
+      trends: ["planterig"] },
+
+    { id: "nektarin", navn: "Nektarin", kat: "frugt & citrus", saeson: [], peak: [7,8], aaretrundt: true,
+      par: ["basilikum", "mandel", "honning", "yoghurt", "vanilje", "skyr"],
+      menu: ["Skyr m. nektarin og ristede mandler på brunch (protein)"],
+      trends: ["protein"] },
+
+    { id: "abrikos", navn: "Abrikos", kat: "frugt & citrus", saeson: [], peak: [6,7], aaretrundt: true,
+      par: ["mandel", "vanilje", "rosmarin", "honning", "lam", "pistacie"],
+      menu: ["Abrikos-mandeltærte på kaffekortet", "Tørrede abrikoser i tagine/lammeretter"],
+      trends: ["nostalgi"] },
+
+    { id: "vandmelon", navn: "Vandmelon", kat: "frugt & citrus", saeson: [], peak: [6,7,8], aaretrundt: true,
+      par: ["feta", "mynte", "lime", "chili", "agurk", "basilikum"],
+      menu: ["Sommersalat: vandmelon, feta & mynte", "Vandmelon-mocktail med lime og mynte"],
+      trends: ["funktionel", "planterig"] },
+
+    { id: "melon", navn: "Melon (cantaloupe/honning)", kat: "frugt & citrus", saeson: [], peak: [7,8], aaretrundt: true,
+      par: ["serrano", "mynte", "lime", "feta", "ingefær"],
+      menu: ["Klassiker: melon m. serrano som let forret/brunch-element"],
+      trends: ["nostalgi"] },
+
+    { id: "vindruer", navn: "Vindruer", kat: "frugt & citrus", saeson: [], peak: [9,10], aaretrundt: true,
+      par: ["blåskimmel", "valnød", "ost", "rosmarin", "honning"],
+      menu: ["Friske druer på oste-/brunch-brættet", "Ovnbagte druer m. rosmarin til ost"],
+      trends: ["planterig"] },
+
+    { id: "figen", navn: "Figen", kat: "frugt & citrus", saeson: [], peak: [8,9], aaretrundt: true,
+      par: ["serrano", "blåskimmel", "honning", "valnød", "balsamico", "gedeost"],
+      menu: ["Figen, serrano & gedeost-salat (sensommer)", "Figen-honning på oste-brunch"],
+      trends: ["planterig", "nostalgi"] },
+
+    { id: "granataeble", navn: "Granatæble", kat: "frugt & citrus", saeson: [], peak: [10,11,12], aaretrundt: true,
+      par: ["feta", "valnød", "mynte", "bulgur", "lam", "yoghurt", "sumak"],
+      menu: ["Granatæblekerner som farve-/syredrys på salater og bowls vinter", "Tabbouleh-style salat m. granatæble"],
+      trends: ["planterig", "funktionel"] },
+
+    { id: "passionsfrugt", navn: "Passionsfrugt", kat: "frugt & citrus", saeson: [], peak: [], aaretrundt: true,
+      par: ["hvid chokolade", "mango", "kokos", "vanilje", "lime", "yoghurt"],
+      menu: ["Passion-curd / topping på cheesecake og pavlova", "Tropisk mocktail på drikkekortet"],
+      trends: ["funktionel"] },
+
+    { id: "kokos", navn: "Kokos", kat: "frugt & citrus", saeson: [], peak: [], aaretrundt: true,
+      par: ["lime", "chili", "mango", "karry", "koriander", "ananas", "chokolade"],
+      menu: ["Kokos-karry base til veganske bowls og supper", "Kokosmakroner/bounty-snack på kaffekortet"],
+      trends: ["asiatisk", "planterig"] },
+
+    /* —— GRØNT (året rundt / import) —— */
+    { id: "kartoffel", navn: "Kartofler", kat: "grønt", saeson: [], peak: [], aaretrundt: true,
+      par: ["smør", "rosmarin", "hvidløg", "creme fraiche", "purløg", "bacon", "parmesan"],
+      menu: ["Pommes-/wedges-setuppet I allerede har – krydr med rosmarin & parmesan", "Kartoffelmos som comfort-tilbehør til aftenretter"],
+      trends: ["nostalgi"] },
+
+    { id: "sod_kartoffel", navn: "Søde kartofler", kat: "grønt", saeson: [], peak: [], aaretrundt: true,
+      par: ["chili", "lime", "feta", "koriander", "bacon", "ahornsirup", "spidskommen"],
+      menu: ["Sweet potato fries m. chilimayo (swicy snack/tilbehør)", "Bagt sød kartoffel i veganske bowls"],
+      trends: ["planterig", "swicy"] },
+
+    { id: "salat", navn: "Salat (romaine/iceberg)", kat: "grønt", saeson: [], peak: [], aaretrundt: true,
+      par: ["parmesan", "croutoner", "ansjos", "citron", "bacon", "kylling"],
+      menu: ["Basen i jeres cæsar – romaine giver crunch hele året", "Sprød salat i wraps og sandwich"],
+      trends: ["protein"] },
+
+    { id: "rucola", navn: "Rucola", kat: "grønt", saeson: [], peak: [], aaretrundt: true,
+      par: ["parmesan", "balsamico", "pinjekerner", "pære", "serrano", "citron"],
+      menu: ["Pebret topping på pizza, sandwich og salater", "Rucola-pesto som variation"],
+      trends: ["planterig"] },
+
+    { id: "peberfrugt", navn: "Peberfrugt", kat: "grønt", saeson: [], peak: [], aaretrundt: true,
+      par: ["feta", "hvidløg", "chili", "olivenolie", "koriander", "spidskommen", "tomat"],
+      menu: ["Ovnbagte/marinerede peberfrugter i bowls og sandwich", "Rød peber-/ajvar-dip"],
+      trends: ["planterig"] },
+
+    { id: "chili", navn: "Frisk chili", kat: "grønt", saeson: [], peak: [], aaretrundt: true,
+      par: ["lime", "hvidløg", "ingefær", "koriander", "honning", "soja", "mango"],
+      menu: ["Hjemmelavet chiliolie/chilimayo til crispy chicken og burgere", "Hot honey: chili + honning (swicy-trend)"],
+      trends: ["swicy", "asiatisk"] },
+
+    { id: "aubergine", navn: "Aubergine", kat: "grønt", saeson: [], peak: [7,8,9], aaretrundt: true,
+      par: ["miso", "tahin", "hvidløg", "tomat", "feta", "granatæble", "basilikum"],
+      menu: ["Miso-glaseret aubergine som vegetar-aftenret (asiatisk)", "Baba ganoush som dip/brunch-element"],
+      trends: ["asiatisk", "planterig"] },
+
+    { id: "champignon", navn: "Champignon", kat: "svampe", saeson: [], peak: [], aaretrundt: true,
+      par: ["hvidløg", "persille", "smør", "fløde", "timian", "soja", "æg"],
+      menu: ["Hvidløgschampignon på brunch og som tilbehør", "Stegte svampe i burgere og bowls"],
+      trends: ["planterig"] },
+
+    { id: "portobello", navn: "Portobello", kat: "svampe", saeson: [], peak: [], aaretrundt: true,
+      par: ["hvidløg", "timian", "blåskimmel", "soja", "balsamico", "parmesan"],
+      menu: ["Grillet portobello som vegetar-burgerbøf (planterig)", "Fyldt portobello m. ost"],
+      trends: ["planterig", "swicy"] },
+
+    { id: "loeg", navn: "Løg", kat: "grønt", saeson: [], peak: [], aaretrundt: true,
+      par: ["smør", "timian", "balsamico", "ost", "bacon", "sennep"],
+      menu: ["Karamelliserede løg på burgere og i sandwich", "Sprøde ristede løg som crunch-drys"],
+      trends: ["zerowaste"] },
+
+    { id: "rodloeg", navn: "Rødløg", kat: "grønt", saeson: [], peak: [], aaretrundt: true,
+      par: ["balsamico", "feta", "sild", "rugbrød", "chili", "koriander"],
+      menu: ["Hurtigt syltede rødløg som syre/farve på alt (smørrebrød, burgere, bowls)"],
+      trends: ["fermentering"] },
+
+    { id: "forarsloeg", navn: "Forårsløg", kat: "grønt", saeson: [], peak: [], aaretrundt: true,
+      par: ["sesam", "soja", "ingefær", "chili", "æg", "laks"],
+      menu: ["Frisk drys på poké bowl, ramen-style og asiatiske retter"],
+      trends: ["asiatisk"] },
+
+    { id: "hvidloeg", navn: "Hvidløg", kat: "grønt", saeson: [], peak: [], aaretrundt: true,
+      par: ["olivenolie", "persille", "chili", "smør", "citron", "rosmarin"],
+      menu: ["Sort hvidløg som umami-bombe i mayo og dressinger", "Hvidløgssmør/aioli til pommes og brød"],
+      trends: ["fermentering"] },
+
+    { id: "ingefaer", navn: "Ingefær", kat: "grønt", saeson: [], peak: [], aaretrundt: true,
+      par: ["lime", "chili", "hvidløg", "soja", "gulerod", "citron", "honning"],
+      menu: ["Ingefær-shot på drikkekortet (funktionel)", "Ingefær i dressinger og asiatiske marinader"],
+      trends: ["funktionel", "asiatisk"] },
+
+    { id: "broenne", navn: "Grønne bønner", kat: "grønt", saeson: [], peak: [7,8], aaretrundt: true,
+      par: ["mandel", "hvidløg", "citron", "bacon", "smør", "sennep"],
+      menu: ["Hurtige bønner m. mandler som grønt tilbehør til aftenretter"],
+      trends: ["planterig"] },
+
+    { id: "edamame", navn: "Edamame", kat: "grønt", saeson: [], peak: [], aaretrundt: true,
+      par: ["salt", "chili", "sesam", "soja", "lime"],
+      menu: ["Edamame m. flagesalt som protein-snack/tilbehør", "Topping i poké bowl"],
+      trends: ["protein", "asiatisk"] },
+
+    { id: "pakchoi", navn: "Pak choi", kat: "grønt", saeson: [], peak: [], aaretrundt: true,
+      par: ["soja", "hvidløg", "ingefær", "sesam", "chili", "østerssauce"],
+      menu: ["Wok-stegt pak choi som asiatisk tilbehør og i bowls"],
+      trends: ["asiatisk", "planterig"] },
+
+    /* —— KØD & FJERKRÆ —— */
+    { id: "oksekoed", navn: "Oksekød (Black Angus)", kat: "kød & vildt", saeson: [], peak: [], aaretrundt: true,
+      par: ["sort peber", "bearnaise", "rødvin", "svampe", "blåskimmel", "rosmarin", "hvidløg"],
+      menu: ["Jeres Black Angus – signatur-bearnaise og svampetilbehør", "Månedens burger med skiftende toppings"],
+      trends: ["nostalgi"] },
+
+    { id: "hakket_okse", navn: "Hakket oksekød", kat: "kød & vildt", saeson: [], peak: [], aaretrundt: true,
+      par: ["løg", "cheddar", "bacon", "sennep", "pickles", "gochujang"],
+      menu: ["Smash-burger basen i alle 6 caféer", "Pariserbøf 2.0 (premium nostalgi)"],
+      trends: ["nostalgi", "swicy"] },
+
+    { id: "kylling", navn: "Kylling", kat: "kød & vildt", saeson: [], peak: [], aaretrundt: true,
+      par: ["citron", "hvidløg", "estragon", "gochujang", "honning", "timian", "chili"],
+      menu: ["Crispy chicken med hot honey eller gochujang-mayo (swicy)", "Kyllingesandwich m. estragon-mayo"],
+      trends: ["swicy", "asiatisk", "protein"] },
+
+    { id: "svinekoed", navn: "Svinekød / nakkefilet", kat: "kød & vildt", saeson: [], peak: [], aaretrundt: true,
+      par: ["æble", "sennep", "fennikel", "salvie", "bbq", "hvidløg", "rødkål"],
+      menu: ["Pulled pork til sandwich/burger og takeaway", "Stegt flæsk som nostalgi-aftenret (med nye kartofler i sæson)"],
+      trends: ["nostalgi"] },
+
+    { id: "bacon", navn: "Bacon", kat: "kød & vildt", saeson: [], peak: [], aaretrundt: true,
+      par: ["æg", "ahornsirup", "cheddar", "salat", "avocado", "løg"],
+      menu: ["Fast brunch-element (æg & bacon)", "Candied bacon m. ahornsirup på burgere (swicy)"],
+      trends: ["protein", "swicy"] },
+
+    { id: "skinke", navn: "Serrano / parmaskinke", kat: "kød & vildt", saeson: [], peak: [], aaretrundt: true,
+      par: ["melon", "figen", "burrata", "rucola", "parmesan", "fersken"],
+      menu: ["Jeres serrano-sandwich – løft med sæsonfrugt (fersken/figen)", "Serrano som salt crunch på salater"],
+      trends: ["nostalgi"] },
+
+    { id: "chorizo", navn: "Chorizo", kat: "kød & vildt", saeson: [], peak: [], aaretrundt: true,
+      par: ["kikærter", "peberfrugt", "æg", "hvidløg", "tomat", "kartoffel"],
+      menu: ["Chorizo-hash på brunch (æg + kartoffel)", "Krydret olie fra stegt chorizo til bowls"],
+      trends: ["protein"] },
+
+    { id: "kalkun", navn: "Kalkun", kat: "kød & vildt", saeson: [], peak: [11,12], aaretrundt: true,
+      par: ["tranebær", "salvie", "bacon", "æble", "timian"],
+      menu: ["Kalkun-club-sandwich som mager protein-mulighed"],
+      trends: ["protein"] },
+
+    /* —— FISK & SKALDYR (året rundt / opdræt) —— */
+    { id: "laks", navn: "Laks", kat: "fisk & skaldyr", saeson: [], peak: [], aaretrundt: true,
+      par: ["dild", "citron", "avocado", "soja", "sesam", "creme fraiche", "agurk", "peberrod"],
+      menu: ["Laksesalat og laks i poké bowl hele året", "Røget/gravad laks på smørrebrød og brunch"],
+      trends: ["protein", "asiatisk"] },
+
+    { id: "tun", navn: "Tun", kat: "fisk & skaldyr", saeson: [], peak: [], aaretrundt: true,
+      par: ["soja", "sesam", "lime", "avocado", "chili", "wasabi", "ingefær"],
+      menu: ["Seared tun / poké med soja-sesam", "Tunmousse-smørrebrød som klassiker"],
+      trends: ["asiatisk", "protein"] },
+
+    { id: "rejer", navn: "Rejer (kogte/tiger)", kat: "fisk & skaldyr", saeson: [], peak: [], aaretrundt: true,
+      par: ["hvidløg", "chili", "citron", "mayonnaise", "dild", "avocado", "lime"],
+      menu: ["Hvidløgs-/chilirejer som tapas-tilbehør", "Rejer på smørrebrød og i bowls hele året"],
+      trends: ["protein"] },
+
+    { id: "roeget_laks", navn: "Røget laks", kat: "fisk & skaldyr", saeson: [], peak: [], aaretrundt: true,
+      par: ["flødeost", "dild", "rødløg", "kapers", "citron", "rugbrød", "æg"],
+      menu: ["Røget laks + flødeost-bagel på brunchkortet", "Smørrebrød m. røget laks og dildcreme"],
+      trends: ["smorrebrod", "protein"] },
+
+    { id: "kammusling", navn: "Kammuslinger", kat: "fisk & skaldyr", saeson: [], peak: [10,11,12], aaretrundt: true,
+      par: ["brunet smør", "blomkål", "bacon", "citron", "ærter", "vanilje"],
+      menu: ["Pandestegte kammuslinger m. blomkål som premium forret/LTO"],
+      trends: ["nostalgi"] },
+
+    /* —— MEJERI & ÆG —— */
+    { id: "aeg", navn: "Æg", kat: "mejeri & æg", saeson: [], peak: [], aaretrundt: true,
+      par: ["bacon", "avocado", "hollandaise", "purløg", "chili", "spinat", "rejer", "trøffel"],
+      menu: ["Æg i alle afskygninger på brunch (pocheret, røræg, benedict)", "Æg & rejer-smørrebrød (jeres klassiker)"],
+      trends: ["protein", "smorrebrod"] },
+
+    { id: "smoer", navn: "Smør", kat: "mejeri & æg", saeson: [], peak: [], aaretrundt: true,
+      par: ["hvidløg", "persille", "citron", "salvie", "ramsløg", "honning"],
+      menu: ["Brunet smør som hemmelig dybde i saucer og grønt", "Kryddersmør til brød og bøffer"],
+      trends: ["nostalgi"] },
+
+    { id: "flode", navn: "Fløde", kat: "mejeri & æg", saeson: [], peak: [], aaretrundt: true,
+      par: ["svampe", "muskatnød", "hvidløg", "parmesan", "vanilje", "estragon"],
+      menu: ["Base i flødesaucer (svampe, bearnaise-DNA) og supper", "Pisket flødeskum til desserter"],
+      trends: ["nostalgi"] },
+
+    { id: "cremefraiche", navn: "Creme fraiche", kat: "mejeri & æg", saeson: [], peak: [], aaretrundt: true,
+      par: ["dild", "purløg", "rygeost", "citron", "rødløg", "kartoffel"],
+      menu: ["Base i dressinger og dips (rygeostcreme, dildcreme)"],
+      trends: ["smorrebrod"] },
+
+    { id: "skyr", navn: "Skyr", kat: "mejeri & æg", saeson: [], peak: [], aaretrundt: true,
+      par: ["bær", "honning", "havre", "vanilje", "mandel", "citron"],
+      menu: ["Skyr-bowl m. bær og granola (protein-brunch)", "Skyr som let base i dressinger og desserter"],
+      trends: ["protein", "funktionel"] },
+
+    { id: "yoghurt", navn: "Yoghurt", kat: "mejeri & æg", saeson: [], peak: [], aaretrundt: true,
+      par: ["mynte", "agurk", "hvidløg", "spidskommen", "honning", "granatæble"],
+      menu: ["Tzatziki-style yoghurtdip til crispy chicken og bowls", "Yoghurtmarineret kylling"],
+      trends: ["protein", "planterig"] },
+
+    { id: "parmesan", navn: "Parmesan", kat: "mejeri & æg", saeson: [], peak: [], aaretrundt: true,
+      par: ["pasta", "rucola", "balsamico", "citron", "svampe", "ærter", "pinjekerner"],
+      menu: ["Umami-drys på salater, pasta og pommes", "Parmesan-crisp som crunch-garniture"],
+      trends: ["nostalgi"] },
+
+    { id: "feta", navn: "Feta", kat: "mejeri & æg", saeson: [], peak: [], aaretrundt: true,
+      par: ["vandmelon", "mynte", "tomat", "oliven", "granatæble", "honning", "squash"],
+      menu: ["Salt friskhed i sommersalater og bowls", "Bagt feta m. tomat og honning som dip"],
+      trends: ["planterig"] },
+
+    { id: "mozzarella", navn: "Mozzarella / burrata", kat: "mejeri & æg", saeson: [], peak: [], aaretrundt: true,
+      par: ["tomat", "basilikum", "fersken", "olivenolie", "balsamico", "ærter", "pesto"],
+      menu: ["Caprese/burrata-salat med skiftende sæsontilbehør", "Burrata-toast på brunch"],
+      trends: ["planterig", "nostalgi"] },
+
+    { id: "cheddar", navn: "Cheddar", kat: "mejeri & æg", saeson: [], peak: [], aaretrundt: true,
+      par: ["bacon", "løg", "æble", "chili", "sennep", "hakket okse"],
+      menu: ["Smelteost på burgere og grilled cheese", "Cheddar-jalapeño twist (swicy)"],
+      trends: ["nostalgi", "swicy"] },
+
+    { id: "gedeost", navn: "Gedeost", kat: "mejeri & æg", saeson: [], peak: [], aaretrundt: true,
+      par: ["rødbede", "honning", "valnød", "figen", "timian", "rucola"],
+      menu: ["Bagt gedeost m. honning til salater og brunch-brættet"],
+      trends: ["planterig"] },
+
+    { id: "flodeost", navn: "Flødeost", kat: "mejeri & æg", saeson: [], peak: [], aaretrundt: true,
+      par: ["røget laks", "dild", "purløg", "citron", "bær", "vanilje"],
+      menu: ["Cheesecake på kaffekortet (skift topping efter sæson)", "Flødeostcreme på bagel og smørrebrød"],
+      trends: ["smorrebrod"] },
+
+    { id: "halloumi", navn: "Halloumi", kat: "mejeri & æg", saeson: [], peak: [], aaretrundt: true,
+      par: ["citron", "honning", "chili", "mynte", "vandmelon", "granatæble"],
+      menu: ["Grillet halloumi som vegetar-protein i bowls og salater", "Halloumi-fries m. hot honey (swicy snack)"],
+      trends: ["planterig", "swicy"] },
+
+    /* —— NØDDER & KERNER —— */
+    { id: "mandler", navn: "Mandler", kat: "nødder & kerner", saeson: [], peak: [], aaretrundt: true,
+      par: ["chokolade", "bær", "vanilje", "citron", "honning", "rosmarin"],
+      menu: ["Ristede mandler som crunch på brunch og salater", "Mandelcrumble på desserter"],
+      trends: ["protein"] },
+
+    { id: "valnodder", navn: "Valnødder", kat: "nødder & kerner", saeson: [], peak: [], aaretrundt: true,
+      par: ["blåskimmel", "pære", "æble", "rødbede", "honning", "gedeost"],
+      menu: ["Ristede valnødder i efterårssalater", "Valnød i gulerodskagen"],
+      trends: ["planterig"] },
+
+    { id: "hasselnodder", navn: "Hasselnødder", kat: "nødder & kerner", saeson: [], peak: [], aaretrundt: true,
+      par: ["chokolade", "jordskok", "kaffe", "brunet smør", "pære"],
+      menu: ["Hasselnød-praliné/dukkah som crunch", "Nutella-style dessert på kaffekortet"],
+      trends: ["nostalgi"] },
+
+    { id: "pistacie_n", navn: "Pistacie", kat: "nødder & kerner", saeson: [], peak: [], aaretrundt: true,
+      par: ["hindbær", "rose", "hvid chokolade", "citron", "lam", "kardemomme"],
+      menu: ["Pistaciecreme på desserter (rammer pistacie-trenden)", "Pistaciedrys på bowls og kager"],
+      trends: ["pistacie"] },
+
+    { id: "cashew", navn: "Cashewnødder", kat: "nødder & kerner", saeson: [], peak: [], aaretrundt: true,
+      par: ["chili", "lime", "soja", "kokos", "karry", "koriander"],
+      menu: ["Cashew-crunch i asiatiske bowls", "Cashew-base i veganske cremesaucer"],
+      trends: ["asiatisk", "planterig"] },
+
+    { id: "pinjekerner", navn: "Pinjekerner", kat: "nødder & kerner", saeson: [], peak: [], aaretrundt: true,
+      par: ["basilikum", "parmesan", "rucola", "spinat", "rosin", "citron"],
+      menu: ["Ristede pinjekerner i pesto og på salater"],
+      trends: ["planterig"] },
+
+    { id: "sesam", navn: "Sesam", kat: "nødder & kerner", saeson: [], peak: [], aaretrundt: true,
+      par: ["soja", "lime", "ingefær", "agurk", "laks", "tahin", "honning"],
+      menu: ["Sesam-soja dressing til poké bowl og slaw", "Furikake-/sesamdrys som crunch"],
+      trends: ["asiatisk"] },
+
+    /* —— BASIS & KORN —— */
+    { id: "mel", navn: "Hvedemel", kat: "basis & korn", saeson: [], peak: [], aaretrundt: true,
+      par: ["gær", "smør", "æg", "surdej", "sukker"],
+      menu: ["Surdej og bagværk in-house som kvalitetsfortælling", "Pandekager og waffles til brunch"],
+      trends: ["nostalgi"] },
+
+    { id: "ris", navn: "Ris (jasmin/sushi)", kat: "basis & korn", saeson: [], peak: [], aaretrundt: true,
+      par: ["soja", "sesam", "laks", "avocado", "edamame", "nori", "lime"],
+      menu: ["Sushiris-base i poké bowls", "Stegte ris som takeaway-venlig ret"],
+      trends: ["asiatisk"] },
+
+    { id: "pasta", navn: "Pasta", kat: "basis & korn", saeson: [], peak: [], aaretrundt: true,
+      par: ["parmesan", "ærter", "basilikum", "svampe", "citron", "chili", "tomat"],
+      menu: ["Jeres ærtepasta – fast favorit, opgradér med sæsongrønt", "Cacio e pepe / svampepasta som vegetar-aftenret"],
+      trends: ["planterig", "nostalgi"] },
+
+    { id: "havregryn", navn: "Havregryn", kat: "basis & korn", saeson: [], peak: [], aaretrundt: true,
+      par: ["bær", "banan", "kanel", "honning", "skyr", "mandel", "æble"],
+      menu: ["Granola/overnight oats på brunch (protein + funktionel)", "Havrecrunch som drys"],
+      trends: ["protein", "funktionel"] },
+
+    { id: "kikaerter", navn: "Kikærter", kat: "basis & korn", saeson: [], peak: [], aaretrundt: true,
+      par: ["tahin", "citron", "spidskommen", "hvidløg", "chili", "koriander"],
+      menu: ["Hjemmelavet hummus som brunch-element/dip", "Sprøde krydrede kikærter som crunch-topping"],
+      trends: ["planterig", "zerowaste"] },
+
+    { id: "linser", navn: "Linser", kat: "basis & korn", saeson: [], peak: [], aaretrundt: true,
+      par: ["karry", "kokos", "spinat", "citron", "spidskommen", "gulerod"],
+      menu: ["Dahl/linsegryde som varm vegetar-aftenret (planterig komfort)", "Linsesalat som proteinrig frokost"],
+      trends: ["planterig", "protein"] },
+
+    { id: "quinoa", navn: "Quinoa", kat: "basis & korn", saeson: [], peak: [], aaretrundt: true,
+      par: ["feta", "granatæble", "mynte", "citron", "avocado", "agurk"],
+      menu: ["Quinoa-base i protein-bowls og salater"],
+      trends: ["protein", "planterig"] },
+
+    /* —— OLIE, EDDIKE & KONDIMENT —— */
+    { id: "olivenolie", navn: "Olivenolie", kat: "olie & kondiment", saeson: [], peak: [], aaretrundt: true,
+      par: ["citron", "hvidløg", "tomat", "basilikum", "brød", "balsamico"],
+      menu: ["God olie som finish på salater, burrata og supper", "Urteolie til at løfte tallerkenen visuelt"],
+      trends: ["planterig"] },
+
+    { id: "balsamico", navn: "Balsamico", kat: "olie & kondiment", saeson: [], peak: [], aaretrundt: true,
+      par: ["tomat", "jordbær", "parmesan", "rødløg", "rucola", "figen"],
+      menu: ["Balsamicoreduktion som syre/sødme på salater og ost"],
+      trends: ["nostalgi"] },
+
+    { id: "soja", navn: "Sojasovs", kat: "olie & kondiment", saeson: [], peak: [], aaretrundt: true,
+      par: ["sesam", "ingefær", "lime", "hvidløg", "honning", "chili", "laks"],
+      menu: ["Soja-base i alle asiatiske dressinger og marinader", "Teriyaki-glace til kylling og laks"],
+      trends: ["asiatisk"] },
+
+    { id: "miso", navn: "Miso", kat: "olie & kondiment", saeson: [], peak: [], aaretrundt: true,
+      par: ["smør", "aubergine", "laks", "honning", "sesam", "spidskål"],
+      menu: ["Misosmør til grønt og fisk (umami-dybde)", "Miso i dressinger og supper"],
+      trends: ["asiatisk", "fermentering"] },
+
+    { id: "gochujang", navn: "Gochujang", kat: "olie & kondiment", saeson: [], peak: [], aaretrundt: true,
+      par: ["honning", "kylling", "sesam", "lime", "hvidløg", "mayo"],
+      menu: ["Gochujang-mayo til crispy chicken og burgere (swicy + koreansk)", "Korean glaze til wings"],
+      trends: ["swicy", "asiatisk"] },
+
+    { id: "sennep", navn: "Sennep (dijon)", kat: "olie & kondiment", saeson: [], peak: [], aaretrundt: true,
+      par: ["honning", "estragon", "svinekød", "vinaigrette", "porre", "torsk"],
+      menu: ["Honning-sennep dressing og dip", "Sennepssauce til torsk (nostalgi)"],
+      trends: ["nostalgi"] },
+
+    { id: "honning", navn: "Honning", kat: "olie & kondiment", saeson: [], peak: [], aaretrundt: true,
+      par: ["chili", "gedeost", "blåskimmel", "citron", "timian", "halloumi"],
+      menu: ["Hot honey (honning + chili) til alt sprødt og ost (swicy)", "Honning-timian til ost og brunch"],
+      trends: ["swicy", "funktionel"] },
+
+    { id: "tahin", navn: "Tahin", kat: "olie & kondiment", saeson: [], peak: [], aaretrundt: true,
+      par: ["citron", "hvidløg", "kikærter", "honning", "aubergine", "spidskommen"],
+      menu: ["Tahindressing til bowls, blomkål og salater", "Tahin i hummus og dips"],
+      trends: ["planterig"] },
+
+    { id: "kapers", navn: "Kapers", kat: "olie & kondiment", saeson: [], peak: [], aaretrundt: true,
+      par: ["citron", "fisk", "brunet smør", "rødløg", "persille", "røget laks"],
+      menu: ["Stegte sprøde kapers som crunch på fisk og smørrebrød"],
+      trends: ["smorrebrod"] },
+
+    { id: "oliven", navn: "Oliven", kat: "olie & kondiment", saeson: [], peak: [], aaretrundt: true,
+      par: ["feta", "tomat", "citron", "rosmarin", "appelsin", "brød"],
+      menu: ["Marinerede oliven som tapas/snack til drikkekortet", "Tapenade som spread"],
+      trends: ["planterig"] },
+
+    { id: "kokosmaelk", navn: "Kokosmælk", kat: "olie & kondiment", saeson: [], peak: [], aaretrundt: true,
+      par: ["karry", "lime", "chili", "ingefær", "koriander", "citrongræs"],
+      menu: ["Base i karry-/kokossupper og veganske cremesaucer", "Kokos-dahl og curry-bowls"],
+      trends: ["asiatisk", "planterig"] },
+
+    /* —— KRYDDERIER & TØRRET —— */
+    { id: "spidskommen", navn: "Spidskommen (cumin)", kat: "krydderier", saeson: [], peak: [], aaretrundt: true,
+      par: ["gulerod", "kikærter", "yoghurt", "lam", "koriander", "chili"],
+      menu: ["Varm base i hummus, dressinger og rodfrugter"],
+      trends: ["planterig"] },
+
+    { id: "roeget_paprika", navn: "Røget paprika", kat: "krydderier", saeson: [], peak: [], aaretrundt: true,
+      par: ["kartoffel", "kylling", "chorizo", "æg", "mayo", "majs"],
+      menu: ["Røget paprika-mayo og krydrede fries", "Smag på rub til crispy chicken"],
+      trends: ["swicy"] },
+
+    { id: "karry", navn: "Karry", kat: "krydderier", saeson: [], peak: [], aaretrundt: true,
+      par: ["sild", "æble", "kokos", "blomkål", "æg", "kylling"],
+      menu: ["Karrysild og karrysalat (nostalgi-smørrebrød)", "Karry-kokos base til veganske bowls"],
+      trends: ["nostalgi", "asiatisk"] },
+
+    { id: "kanel", navn: "Kanel", kat: "krydderier", saeson: [], peak: [], aaretrundt: true,
+      par: ["æble", "banan", "kaffe", "vanilje", "havre", "kardemomme"],
+      menu: ["Kanelsnegle/kanelbrunch og chai-latte på kaffekortet", "Kanel i æbledesserter"],
+      trends: ["nostalgi"] },
+
+    { id: "vanilje", navn: "Vanilje", kat: "krydderier", saeson: [], peak: [], aaretrundt: true,
+      par: ["bær", "rabarber", "chokolade", "kaffe", "pære", "mascarpone"],
+      menu: ["Vaniljecreme/is som dessert-base til alle sæsonbær"],
+      trends: ["nostalgi"] },
+
+    { id: "sumak", navn: "Sumak", kat: "krydderier", saeson: [], peak: [], aaretrundt: true,
+      par: ["yoghurt", "granatæble", "kylling", "agurk", "feta", "løg"],
+      menu: ["Syrligt drys på bowls, hummus og grillet kylling"],
+      trends: ["planterig"] },
+
+    { id: "dukkah", navn: "Dukkah", kat: "krydderier", saeson: [], peak: [], aaretrundt: true,
+      par: ["yoghurt", "gulerod", "æg", "hummus", "olivenolie", "brød"],
+      menu: ["Nøddet crunch-drys på brunch-grønt, æg og dips"],
+      trends: ["planterig", "zerowaste"] },
+
+    { id: "furikake", navn: "Furikake", kat: "krydderier", saeson: [], peak: [], aaretrundt: true,
+      par: ["ris", "laks", "avocado", "æg", "edamame", "sesam"],
+      menu: ["Umami-crunch på poké bowls, ris og avocado-toast"],
+      trends: ["asiatisk"] },
+
+    /* —— FRISKE URTER (året rundt) —— */
+    { id: "persille", navn: "Persille", kat: "urter", saeson: [], peak: [], aaretrundt: true,
+      par: ["hvidløg", "citron", "fisk", "smør", "kapers", "bulgur"],
+      menu: ["Gremolata og persillesmør til fisk og bøf", "Friskhed i tabbouleh og dressinger"],
+      trends: ["zerowaste"] },
+
+    { id: "koriander", navn: "Koriander", kat: "urter", saeson: [], peak: [], aaretrundt: true,
+      par: ["lime", "chili", "kokos", "avocado", "mango", "soja", "ingefær"],
+      menu: ["Frisk topping på bowls, tacos og asiatiske retter", "Koriander-lime dressing"],
+      trends: ["asiatisk", "planterig"] },
+
+    { id: "rosmarin", navn: "Rosmarin", kat: "urter", saeson: [], peak: [], aaretrundt: true,
+      par: ["kartoffel", "lam", "hvidløg", "citron", "honning", "svinekød"],
+      menu: ["Rosmarin-fries og ovnkartofler", "Rosmarin-honning til ost og cocktails"],
+      trends: ["nostalgi"] },
+
+    { id: "salvie", navn: "Salvie", kat: "urter", saeson: [], peak: [], aaretrundt: true,
+      par: ["græskar", "brunet smør", "svinekød", "parmesan", "pasta", "kalkun"],
+      menu: ["Salvie-brunet smør til græskar-/svamperetter og pasta"],
+      trends: ["planterig"] },
+
+    { id: "oregano", navn: "Oregano", kat: "urter", saeson: [], peak: [], aaretrundt: true,
+      par: ["tomat", "feta", "olivenolie", "citron", "hvidløg", "lam"],
+      menu: ["Middelhavs-DNA i tomatsaucer, dressinger og på feta"],
+      trends: ["planterig"] },
+
+    { id: "citrongraes", navn: "Citrongræs", kat: "urter", saeson: [], peak: [], aaretrundt: true,
+      par: ["kokos", "ingefær", "lime", "chili", "koriander", "rejer"],
+      menu: ["Aromatisk base i kokos-/karrysupper og asiatiske bouilloner"],
+      trends: ["asiatisk"] }
   ],
 
   /* ---------- IDÉVÆRKTØJ: SPØRGSMÅLSRAMMER ---------- */
